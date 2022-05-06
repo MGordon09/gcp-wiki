@@ -1,0 +1,493 @@
+Connect to GCP
+
+Connect to GCP
+Agency laptop users
+1 - To connect to the platform using your agency machine, follow the link https://console.cloud.google.com/
+ 
+2 - Enter the Google Account credentials provided to you NIBSC ( you need to set up two factor authentication on the account: see walkthrough: https://support.google.com/accounts/answer/185839)
+ 
+3 - You should now have access to the console:
+
+4 - All resources in GCP (VPC networks, storage buckets, VMs etc..) must be created within a project. You will need to choose a project to begin. 
+ 
+5 - Projects have been created for each user under folders in mhra.gov.uk -> dev -> ngs. Select the project under under your folder name. Project names will follow the convention: mhra-ngs-dev-*
+Only you (and org admins) have access to resources in your project, so please use this project for all future work. The infrastructure of these projects mirrors MVP project mhra-ngs-dev-c0c0, so should have the same functionality
+ 
+
+ 
+ 
+Data Storage on GCP
+Unlike the on-site HPC which uses file storage, data in GCP is not stored and organised as a hierarchy of files in folders.  Instead, GCP uses object storage where each piece of data is stored in as an object and accessed and retrieved using a unique identifier/key (each object has a unique URL).
+ 
+Cloud storage files are organised into buckets. When you create a bucket: you give it a globally-unique name; you specify a geographic location where the bucket and its contents are stored*; and you choose a storage class.
+
+*Pick a location in the same region as your VMs to minimise latency.
+
+ 
+Buckets can be created and managed using:
+GCP console or
+The gsutil commands available via gcloud or cloud SDK suite.
+ 
+GCP Console
+ 
+1. Search for cloud storage using the console search bar and click on the service
+ 
+2. To create a bucket, select 'Create Bucket'
+ 
+3.  Give the bucket a globally unique name (allows you to share the bucket contents with users outside your project), select the London region (Europe-West2) as the location type, choose 'Standard' as the default storage class and ensure access control is set as 'Uniform'.
+
+ 
+4. To upload data to the bucket you have created, click on the bucket name in the console and select upload files/upload folder
+Note: upload speeds can be quite slow for big files; it is recommended to use the gsutil suite with multithreading enabled to upload large files/folders
+ 
+
+5. To download or delete files/folders in a bucket, select the object in the bucket and choose Download/Delete option:
+
+ 
+Common Gsutil commands
+ 
+A faster, more flexible option for managing storage objects and bucekts is the gsutil scripts included as part of the cloud SDK. Many of these gsutil commands work similarly to linux file manipulation commands (cp, mv, rm etc). Some examples of common gsutil commands are included below:
+ 
+1.Create bucket
+ 
+gsutil mb -b on -c "Standard" -l europe-west2 gs://{​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​/
+*-b: uniform bucket-level access(on/off), -l: location, -c storage class
+ 
+2.  Copy file to bucket
+ 
+gsutil cp Desktop/example.png gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+ 
+3. Create folder in bucket and copy file into it
+ 
+gsutil cp gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/example.png gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/test-folder/example.png
+ 
+4.  List objects in bucket or folder
+ 
+gsutil ls gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+ 
+5. Download objects in bucket locally
+gsutil cp gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/example.png Desktop/example.png
+ 
+6. Delete object in bucket
+ 
+gsutil rm gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/example.png
+ 
+7. Delete bucket and all objects stored within  using rm -r
+ 
+gsutil rm -r gs://my-awesome-bucket
+ 
+ 
+Resources
+For further information, see gsutil documentation: gsutil --help
+​​​​​​​Gsutil quick start documentation https://cloud.google.com/storage/docs/quickstart-gsutil
+Mounting Storage Buckets to VMs using GCSFuse
+While our GCP environment does not have a shared file storage system, a tool called GCSFuse can be used to create an imitation of user file storage system for interacting with Cloud Storage buckets and objects. 
+ 
+Input and output buckets have been created for you and automatically mounted to VM folders using gcsfuse for VMs spun created from the available instance templates. You can follow the instructions below to use gcsfuse to mount and unmount additional buckets.
+ 
+Note: Before invoking gcsfuse, you must have a GCS bucket that you want to mount. If your bucket doesn't yet exist, create one using the the instructions in the previous section.
+ 
+Say you want to mount the GCS bucket called my-bucket.
+ 
+1. First create the directory into which you want to mount the gcsfuse bucket, then run gcsfuse: 
+ 
+mkdir /path/to/mount/point
+gcsfuse my-bucket /path/to/mount/point
+ 
+2. Check the bucket has been mounted successfully by running ls /path/to/mount/point
+ 
+3. On Linux, you can unmount the buckets using fuse's fusermount tool: Note
+ 
+fusermount -u /path/to/mount/point                                                                   
+ 
+4. On OSX unmount by running the below:
+umount /path/to/mount/point
+ 
+Note on gcsfuse mounts & issues identifying items in subdirectories: 
+GCS object names map directly to file paths using the separator '/'. Object names ending in a slash represent a directory, and all other object names represent a file.
+Directories are by default not implicitly defined; they exist only if a matching object ending in a slash exists.
+For example, say that you use a nextflow pipeline to create a folder and associated objects such as  "fastqc-logs/fastqc.html" in your bucket, and the bucket is mounted with gcsfuse. The file system will initially appear empty, since there is no "fastqc-logs/" object. However if you subsequently run mkdir fastqc-logs, you will now see a directory named "fastqc-logs" containing a file named "fastqc.html".
+ 
+Resources
+GCSFuse Github page: https://github.com/GoogleCloudPlatform/gcsfuse
+ 
+Uploading Data to GCP Buckets
+ 
+
+Users can upload data to GCP storage buckets using a number of available methods:
+
+ 
+
+GCP Console
+Cloud Shell
+Cloud SDK
+ 
+
+GCP Console
+
+For uploading smaller files users can start a GCP session, navigate to the relevant bucket in cloud storage and select the upload files/folder option:
+
+ 
+
+Cloud Shell
+
+Users can also access the Cloud Shell on GCP and use the gsutil suite to upload data from their local machine to a GCP bucket:
+
+ 
+
+Cloud SDK (Recommended for uploading sequencing data stored on the HPC)
+
+For uploading larger files (e.g fastq files), mac and/or HPC users can install the Cloud Software Development Toolkit (Cloud SDK) and use this to transfer the data. We will demonstrate both approaches here:
+
+ 
+
+1 - HPC uploads
+
+2 - Log on to hpc-scratch.
+
+3 - Add the following lines to your bashrc:
+
+# updates PATH for the Google Cloud SDK:
+
+if [ -f '/opt/google-cloud-sdk/path.bash.inc' ]; then . '/opt/google-cloud-sdk/path.bash.inc'; fi
+
+# enables shell command completion for gcloud.
+
+if [ -f '/opt/google-cloud-sdk/completion.bash.inc' ]; then . '/opt/google-cloud-sdk/completion.bash.inc'; fi
+
+ 
+
+4 - Run the following commands to update env:
+
+# proxy server information stored here
+
+$ source /etc/environment 
+
+# bash profile with gcloud SDK PATH
+
+$ source ~/.bashrc
+
+ 
+
+5 - Test if gsutil is working
+
+$ gsutil
+
+ 
+
+6 - Initialise gcloud SDK using below command. 
+
+gcloud init --console-only
+
+ 
+
+7 - Select your project and region (europe-west2/c)
+
+ 
+
+8 - If target GCP bucket does not exist, create bucket:
+
+# list buckets associated with project
+
+gsutil ls
+
+#create bucket in  europe-west2 region
+
+gsutil mb -l europe-west2 gs://{​​​​​​MY_BUCKET}​​​​​​
+
+ 
+
+9 - Run the following to copy data to your GCP bucket:
+
+gsutil cp /PATH/TO/DATA/​*.fastq.gz gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​MY_BUCKET}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+
+# can use the -m option to run command (mv,cp, rsync) in parallel: 
+
+gsutil cp -m /PATH/TO/DATA/​*.fastq.gz gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​MY_BUCKET}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+
+ 
+
+(NB: Be aware filesystem mount locations may differ between the HPC VMs: run $ df -h  to identify mounted paths)
+
+ 
+
+Resources:
+
+Cloud SDK Initialisation
+
+https://cloud.google.com/sdk/docs/initializing
+
+gsutil Command Line Options
+
+https://cloud.google.com/storage/docs/gsutil/addlhelp/GlobalCommandLineOptions
+
+Running Jobs on GCP
+Maybe separate sections for running batch jobs and nextflow jobs as these are different user stories/workflows that will be provided by AppsBroker
+TODO
+Installing Software on GCP
+TODO
+instructions on modifying environments and crteating images - maybe link to the Github for additional info?
+Instructions on pushing/pulling docker/cloud registry images and running containers? Seem to be used a lot for genomics workflows on GCP
+Creating VM Instances from Instance Templates
+Users have the choice to create VM's from two instance templates depending on their workload:
+ 
+mhra-ngs-tools: VM template with conda, singularity, cloud SDK and installed
+mhra-ngs-nextflow-dsub: VM template with nextflow, dsub and cloud SDK installed
+These two images should give you flexibility to execute your workflows.
+ 
+The mhra-ngs-tools template generates a larger machine with more disk space and is more suitable environment for interactive sessions.
+ 
+The mhra-ngs-nextflow-dsub template generates a smaller VM suitable for launching batch jobs using either dsub or Nextflow. Both tools use the Google Life Science API (https://cloud.google.com/life-sciences/docs/reference/rest) to orchestrate these workflows.
+ 
+Generating VM from template
+ 
+1 - Log in to GCP using your account credentials
+ 
+2 -  Select your project. Ensure you have selected MHRA.GOV.UK as the organisation (all projects associated with the organisation are billed to the MHRA)
+ 
+3 - Search for 'Compute Engine' in the GCP console search bar -> select 'Create Instance' -> 'New VM instance from template'. Select the image that best fits your workflow and hit continue:
+
+ 
+4 - Name your VM, select europe-west2 (London) as region (any zone is fine), scroll down and click 'Create'.
+Please do not edit configurations without good reason
+(P.S. VMs can be created gcloud CLI tool suite via cloud shell or cloud SDK installed on the HPC or your personal machine: check out the 'Equivalent Command Line' option below and try it!
+
+ 
+5 - You have now created a fully-functioning VM! To view your VM, return to the VM instances screen. You will see a green tick beside your VM if it is operational. 
+
+To pause/stop/restart your VM, select the three dots in the right-hand side of the screen and choose an option
+Remember to please stop your VM when not in use and delete once your work is finished to avoid incurring excessive costs! The budget is centrally managed, so if it runs out GCP is unavailable for everyone
+ 
+6 - To connect to your VM select the 'ssh' button beside it's name, this will create a new pop-up window and provide access to the VM terminal:
+
+ 
+7 - You are now ready to start you analysis! Check out the next section for some standard workflows
+ 
+Resources
+Creating VMs from Image Templates
+https://cloud.google.com/compute/docs/instances/create-vm-from-instance-template
+Connecting to VM instances
+https://cloud.google.com/compute/docs/instances/connecting-to-instance
+Gcloud CLI cheatsheet
+https://cloud.google.com/sdk/docs/cheatsheet
+Common Workflows on GCP
+Here we provide a brief walkthrough for running basic workflows on VM's created from the instance templates.
+As we become more familiar with GCP, the methods listed here may change to better represent best working practises on the platform.
+ 
+We strongly encourage users to adapt the workflows as needed and come forward with improvements and/or functional requests to help us improve the service for everyone!
+ 
+mhra-ngs-tools
+ 
+conda workflow
+ 
+1. Create a VM from the mhra-ngs-tools instance template using the instructions in the previous section.
+
+ 
+2. ssh onto the VM. Allow some time for system boot-up and software installations. When the envinronment is ready, you shoudl see a prompt similar to the image below. The VM is now ready for use!
+ 
+You can check see from the boot-up message that two buckets have been automatically mounted: ${​​​​​​​PROJECT-ID}​​​​​​​-input and ${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-out. Both are mounted under gcsfuse folder in your home directory
+
+3. Upload data to bucket. You can upload some test fastQ files to these buckets using either the GCP console or gsutil.
+You can use the available buckets or create new buckets and mount them as explained earlier. 
+ 
+I am using gsutil, which is installed on hpc-scratch as shown below. See gsutil section for user authentication and configuration set-up.
+View buckets available on your project:
+
+ 
+Copy data to the bucket. Use the -m option torun command in parallel for increased speed of transfer
+
+ 
+You can now view these objects in your storage bucket. Check the data is mounted on your vm (second image)
+​​​​​​​
+
+ 
+We will now create a conda environment, install a standard tool (cutadapt) and run this on the mounted input folder. Processed output will be written to a mounted output bucket*
+You can write this to the local machine but beware disk space limitations. Disk space can be increased on VM at start-up, or you attach a additional disks for extra space
+ 
+Three conda enviornments are available in the image by default. The default environment contains many tools preinstalled - you can view these tools by activating the environment and running 'conda list'  
+
+ 
+To run this workflow, we will be creating a new conda environment. Run the code below to create a new environment and install latest version of cutadapt (check out the Anaconda website to see available conda packages: https://anaconda.org/bioconda)  
+
+ 
+Wait for the libraries(s) to download and activate environment. Run 'cutadapt -h' to confirm the environment is ready
+ 
+Run  cutadapt over data in the mounted input bucket and write output to the mounted output bucket. You can modify your own scripts to do this. Check the output bucket for the trimmed data.
+
+
+ 
+singularity workflow
+ 
+Singularity is pre-installed on the VM created from the ngs-tools template. The workflow is very similar to the conda workflow above.
+ 
+Check the singularity version. Run 'singularity pull' to pull an image from one of the public registries. You can also use this command to pull docker images and create singularity image files (*.sif) from them. For the purposes of this tutorial, we will pull a docker image of the cutadapt tool from DockerHub (note the '://docker' prefix below)
+
+The cutadapt image is now availble (cutadapt.sif). 
+ 
+Enter the container and confirm cutadapt is working
+
+ 
+Run the cutadapt command again to write data to the output bucket** Check the bucket to confirm the data is there
+
+ 
+*While the service account used to access the VM has bucket write permissions, it does not have modify permissions for objects in the bucket i.e. you can't overwrite, alter or delete items in the bucket from your VM (this restriction does not apply to commands run in gcloud or GCP console). To run this step, either i) remove items in the output bucket from the GCP console or ii) name the files something different
+**Some directories are automatically mounted into the container by default (special auto bind mount directories include: $HOME /tmp /proc /sys /dev ) As gcsfuse folder is in $HOME, you don't need to do anything extra. To mount additional directories use option or set the environmental variable (--bind  $SINGULARITY_BINDPATH)
+ 
+You can now spin up VMs, mount & unmount buckets using GCSfuse and run workflows using tools available through conda and singularity!
+ 
+Resources
+Conda documentation: https://docs.conda.io/projects/conda/en/latest/user-guide/index.html
+Conda cheat sheet: https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf
+Singularity documentation: https://sylabs.io/guides/3.5/user-guide/introduction.html
+Singularity tutorial: https://singularity-tutorial.github.io/
+ 
+mhra-ngs-nextflow-dsub
+ 
+ 
+Nextflow workflow
+ 
+Nextflow is a workflow management software commonly used by bioinformaticians to integrate all of their bash/python/perl/other scripts into a one cohesive workflow. Nextflow allows users to create scalable, modular and reproducible scientific workflows underpinned by software (docker/singularity/conda) containers.
+ 
+Nextlfow integrates nicely with GCP Google Life Science API, which runs in the background and manages compute engine resources (ie configure, create and destroy VMs) as required by the pipelines. With a single command, you can launch a Nextflow pipeline composed of several processes each associated with their own container, and Nextflow and GCP will orchestrate the workflow for you!
+ 
+Below we provide instructions on running a toy nextflow pipeline inside the VM. Both Nextlfow and the pipeline have been installed for you on the mhra-ngs-nextflow-dsub instances. 
+ 
+1. Create a VM from the mhra-ngs-nextflow-dsub instance template using the instructions provided previously.
+ 
+2. ssh onto the VM. Allow some time for system boot-up and software installations. When the envinronment is ready, you shoudl see a prompt similar to the image below. The VM is now ready for use!
+ 
+3. You can check see from the boot-up message that three buckets have been automatically mounted: ${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-input and ${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-out, and ${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-nextflow. The buckets are mounted under gcsfuse folder in your home directory
+
+4. With a newly created VM, you must first exit the VM and ssh back in. This is necessary to initialise Docker installation.
+ 
+5.  You can check where nextflow is installed using the 'which' command:
+
+ 
+6. Before running the toy RNAseq pipeline, we must first check if the pipeline has been configured correctly. You can see from the VM start-up message the rnaseq-nf cpipeline is installed under /opt/nextflow. Run the follwoing command to edit the configuration file for the rnaseq-nf pipeline:
+
+ 
+You can see below that the pipeline output location has been set to a results directory in $HOME (this will be created by the pipeline run). We would like to modify this to store data in a Google Storage bucket as 1) disk space is limited on the VM* and 2) data in storage is more secure long-term as everything stored in a VM is lost if it is deleted!
+*Disk space can be increased by customising the VM at start-up. You can also attach a secondary disk to the VM if needed.
+​​​​​​​
+ 
+7. Edit line 26 in the config file (params.outdir = "results") to redirect output to a storage bucket. Either create your own or use the output bucket already available: ${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT_ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-output
+​​​​​​​
+
+ 
+Lets take a look at some of the other pipeline pre-set configurations. Scroll down to line 66 to see the gls execution profile for the Google Life Science environment.
+
+Profiles are a set of configuration attributes that can be activated when launching a nextflow pipeline execution by using the '-profile' command line option. 
+Important profile configurations include:
+-process.executor: the executor is the nextflow component that determines the system where a pipeline is run and supervises it's execution. Other options for different environments include slurm and local among others. 
+-google.location: the Google locations where the job executions are deployed to Google Life Sciences API
+-google.region: Google region where compute is executed
+-google.project: The Google project associated with the pipeline 
+-google.lifesciences.network: The network to attach the VM network interface to 
+-google.lifesciences.serviceAccountEmail: The Google service account used for the pipeline execution
+-google.lifesciences.subnetwork: The name of the subnetwork to attach the VM instance to
+ 
+For more information on different profile options available, check out the configuration options in the Google Cloud section of the Nextlfow documentation (https://www.nextflow.io/docs/latest/google.html)
+ 
+8. Now we are ready to run the pipeline! cd to $HOME and run the following command:
+
+ 
+You should see the Nextlfow welcome message and pipeline start-up. You can see progress on the different processes/tasks and associated work directories.
+You will also notice that the scripts are exported to a work directory bucket. The current VM serves only kick start the pipeline, with the computation performed elsewhere (in VMs spun up by Google Life Science VMs)
+
+ 
+If you refresh the VM instances page on the GCP console (or run 'gcloud compute instances list' on command line) you will see the Google Life Sciences API has created new VMs to execute the pipeline processes. These will be spun down automatically after use.
+ 
+
+ 
+You will see something similar if your pipeline has run successfully
+
+After the pipeline has completed, check your output bucket for the results. You can also look inside the ${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT_ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-nextflow bucket, which for our tutorial functions as the work/scratch directory for the pipeline and holds intermediate files and info on the processes and commands run.
+Note: The work directory can be very useful for troubleshooting and investigating issues with your pipeline run
+
+ 
+You might also want to access these files in the mounted directories. Notice that if you look inside the output folder the fastqc_gut_logs folder and it's output seems to be missing...
+
+ 
+This is a quirk of the GCSFuse software, where directories created by external processes (eg a Nextlfow pipeline) are not implicitly defined (see above section on gcsfuse for futher info). To view these files in the mounted directly, simply create a directory named 'fastqc_gut_logs')
+
+ 
+You have now seen how to configure and run a nextflow pipeline on a VM using the Google Life Science API!
+ 
+Resources:
+Nextflow documentation:https://www.nextflow.io/docs/latest/index.html
+nf-core community developed nextflow pipelines: https://nf-co.re/​​​​​​​
+Google Life Science API documentation: https://cloud.google.com/life-sciences/docs​​​​​​​
+Nextflow tutorial on GCP: https://cloud.google.com/life-sciences/docs/tutorials/nextflow
+ 
+ 
+ 
+ 
+Dsub workflow
+ 
+Dsub is a commmand-line tool that allows you to submit and run containerised batch jobs in cloud computing environments. Dsub is modelled after traditional high-performance computing job schedulers like SLURM. Similar to Nextflow, Dsub also uses the GLS API as backend executor to run batch jobs. Dsub can be considered analogous to SLURM sbatch commands.
+ 
+ 
+1. Follow steps 1-4 for the Nextflow workflow above.
+ 
+2. Once you have ssh'ed back into the machine, check that dsub is installed:
+
+ 
+3. Open the bash script containing the dsub test job submission script
+
+ 
+4. Dsub job scripts share some overlap with the nextflow config file. Some of the key parameters are:
+-provider: the executor for the dsub job. Can be set to 'local' for testing
+-project: the Google project where the pipeline is to be run
+-region: compute engine zone where pipeline task are to be run
+-location: Location for job submission to the Google Life Sciences API
+-service-account: email address for the service-account authenticated with the VM
+-image: docker image containing the software necessary to run the workflow
+-network: network VM is connected to via the VM network interface
+-input/output: input and output for the pipeline. Notice how these have been assigned to bash variables and which can be called when executing the pipeline
+-command: ​​​​​​​The command executed 
+
+ 
+Options for dsub job submissions are very flexible. Similar to sbatch, you can also submit as script as a task instead of a command by substituting the `--command` option with --script parameter and providing the path to the script. You are also not limited to running bash scripts - check out dsub script examples on Github to get some ideas! https://github.com/DataBiosphere/dsub/tree/main/examples/custom_scripts
+ 
+You can also submit a list of files to be run as multiple tasks by supplying a tsv file with sample input and output information to the --task parameter in place of --input and --output. Check out the custom scripts links above to see how this is achieved.
+ 
+5. Exit the script and execute it from your home directory. You will see tasks spawned by dsub and executed in compute engine VMs spawned by the GLS API. Once the pipeline has completed successfully, you will see a 'SUCCESS' message appear on screen:
+
+ 
+6. Check your storage buckets to confirm output has been stored there.
+
+ 
+Resources
+Dsub tutorial on Google Cloud: https://cloud.google.com/life-sciences/docs/tutorials/dsub
+Dsub github page: https://github.com/DataBiosphere/dsub​​​​​​​
+Container Registry for Storing Docker Images on GCP
+Managing Docker images includes listing images in a repository, adding tags, deleting tags, copying images to a new repository, and deleting image
+Sharing Data on GCP
+How to i) upload data to public repo (eg SRA via sftp) and ii) share data with external collaborators
+TBD by AppsBroker how this will be done..
+Best Practises
+Can lift sections from hpc wiki for this - covers good documentation and standard project structure, managing conda environments etc.
+This will also feed into data retention policy & guidance
+Data Storage & Retention Policies
+Could include in best practises above but maybe a separate section to stress this to avoid spiralling costs and/or repeat of HPC situation
+Outline GCP Lifecycle management policy (automatic live to cold storage conversion after X time)
+Guidance on data retention policy (keep raw data, reports, documentation and file of software dependencies - delete intermediate/unwanted files)
+Code Version Control
+I think most of this can be taken from the HPC wiki. Adjustments for pulling code into VMs
+FAQ
+Post common questions and answers. 
+Encourage users to fill in or should 'we' curate this? Could either create log for common queries or just populate from things that crop up in the help channel
+Additional Resources
+Guide for using Cloud shell as an IDE: https://dev.to/ndsn/tips-and-tricks-for-using-google-cloud-shell-as-a-cloud-ide-4cek
+Links to relevant docs for further reading
+GCP Training Spreadsheet - 
+ 
+Access to Quiklabs
+1. First logout from the qwiklabs account and open incognito window on your browser. (CTRL/CMD+SHIFT+N).
+2. Go to this URL https://www.cloudskillsboost.google/catalog?keywords=GSP282&event=Your and put this unique access code: XXXXXXXXXXXXXX (you will get this from mail) in the popup asking for access code.
+3. Now, sign in to your Qwiklabs account.
+4. Now, if you click the profile icon on the top right corner, you can see now that you have 9 credits to get started.
+5. Once you have the 9 credits, click on the Enroll on this on-demand quest, click on the first lab and then click on the green "Start Lab".
+6. Now follow the steps given in the lab & complete it. (Spend atleast 5 minutes in the lab) Once you finish this lab, click on the "End Lab" button, you will automatically get a one month free pass credited to your account.
+7. To check for the subscription you have received, please visit this link ( https://www.cloudskillsboost.google/my_account/credits) .
+

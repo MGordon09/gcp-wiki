@@ -11,7 +11,7 @@ Use your work account email address as the username and the GCP password provide
 
     If you need help resetting your password please contact a member of the NGC core bioinformatics team or NTT support staff (khushwant.sidhu@nttdata.com, martin.webster@nttdata.com).
 
-You will also need to set up two factor authentication on the account: see walkthrough `here <https://support.google.com/accounts/answer/185839>`_.
+You will also need to set up two factor authentication on the account: see `walkthrough <https://support.google.com/accounts/answer/185839>`_.
 
 You should now have access to the GCP console:
 
@@ -40,7 +40,7 @@ Projects have been created for users under dev -> ngs.
 
 Click on the drop down menu beside the search bar on the homepage and select the project under your folder name:
 
-.. image:: ../images/gcp-selectproject.png
+.. image:: ../images/GCP-selectproject.png
   :width: 800
   :alt: Selecting project on the console
 

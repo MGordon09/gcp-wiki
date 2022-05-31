@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moving data from HPC &mdash; GCP NIBSC Wiki 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="creating-vms.html" />
+    <link rel="prev" title="Data Storage &amp; Access" href="storage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> GCP NIBSC Wiki
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="connecting.html">Your First GCP Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Data Storage &amp; Access</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Moving data from HPC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#uploading-data-from-hpc-scratch">Uploading data from hpc-scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="qwiklabs.html">GCP Training Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GCP NIBSC Wiki</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Moving data from HPC</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/uploading.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="moving-data-from-hpc">
+<h1>Moving data from HPC<a class="headerlink" href="#moving-data-from-hpc" title="Permalink to this headline"></a></h1>
+<p>Users can upload data to GCP storage buckets using a number of available methods:</p>
+<ul class="simple">
+<li><p>GCP Console</p></li>
+<li><p>Cloud Shell</p></li>
+<li><p>CLI via Cloud SDK</p></li>
+</ul>
+<p><em>GCP Console</em></p>
+<p>For uploading smaller number of files users can start a GCP session, navigate to the relevant bucket in cloud storage and select the upload files/folder option:</p>
+<p>This will allow you to upload files in <cite>$HOME</cite> directory on HPC</p>
+<a class="reference internal image-reference" href="_images/gcp_upload.png"><img alt="Uploading objects from buckets" src="_images/gcp_upload.png" style="width: 800px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Your <cite>$HOME</cite> directory must be mapped to a network drive on your agency machine to use this method.</p>
+</div>
+<p><em>Cloud Shell</em></p>
+<p>Users can also access the Cloud Shell on GCP and use the gsutil suite to upload data from their local machine (or a mapped drive) to a GCP bucket:</p>
+<section id="uploading-data-from-hpc-scratch">
+<h2>Uploading data from hpc-scratch<a class="headerlink" href="#uploading-data-from-hpc-scratch" title="Permalink to this headline"></a></h2>
+<p><em>Cloud SDK</em></p>
+<p>HPC users can use the pre-installed Google Cloud Software Development Toolkit (Cloud SDK) to transfer the data in bulk.</p>
+<p>Cloud SDK, including gsutil tool, is pre-installed on hpc-scratch. The method for transferring files</p>
+<ul class="simple">
+<li><p>Log on to hpc-scratch using your agency credentials</p></li>
+<li><p>You will first need to add cloud SDK to your <cite>$PATH</cite>. Open your bash config file with <cite>nano ~/.bashrc</cite> and enter the following at the bottom of the file:</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># updates PATH for the Google Cloud SDK:
+
+if [ -f &#39;/opt/google-cloud-sdk/path.bash.inc&#39; ]; then . &#39;/opt/google-cloud-sdk/path.bash.inc&#39;; fi
+
+# enables shell command completion for gcloud.
+
+if [ -f &#39;/opt/google-cloud-sdk/completion.bash.inc&#39; ]; then . &#39;/opt/google-cloud-sdk/completion.bash.inc&#39;; fi
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Save and exit the file. Run the following command in shell to update the environment:</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># proxy server information stored here
+$ source /etc/environment
+
+# bash profile with gcloud SDK PATH
+$ source ~/.bashrc
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Test if gcloud has been added to <cite>$PATH</cite></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gcloud</span> <span class="pre">info</span></code></p>
+<ul class="simple">
+<li><p>Initialise gcloud using below command. Select your project and region (europe-west2)</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gcloud</span> <span class="pre">init</span> <span class="pre">--console-only</span></code></p>
+<ul class="simple">
+<li><p>If target GCP bucket does not exist, create bucket</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">mb</span> <span class="pre">-l</span> <span class="pre">europe-west2</span> <span class="pre">gs://{​​​​​​MY_BUCKET}</span></code></p>
+<ul class="simple">
+<li><p>Run the following to copy data to your GCP bucket:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">cp</span> <span class="pre">/PATH/TO/DATA/​*.fastq.gz</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​MY_BUCKET}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">-m</span></code> option to run command (mv,cp, rsync) with multi-threading enabled: <code class="docutils literal notranslate"><span class="pre">$gsutil</span> <span class="pre">cp</span> <span class="pre">-m</span> <span class="pre">/PATH/TO/DATA/​*.fastq.gz</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​MY_BUCKET}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</span></code></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be aware filesystem mount locations may differ between the HPC VMs: run <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">df</span> <span class="pre">-h</span></code> to identify mounted filesystems</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For some additional resources for transferring data check out <a class="reference external" href="https://cloud.google.com/sdk/docs/initializing">cloud SDK initialization</a>.  and <a class="reference external" href="https://cloud.google.com/storage/docs/gsutil/addlhelp/GlobalCommandLineOptions">gsutil options</a>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="storage.html" class="btn btn-neutral float-left" title="Data Storage &amp; Access" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="creating-vms.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Martin Gordon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

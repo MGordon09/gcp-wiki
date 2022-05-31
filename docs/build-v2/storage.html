@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Storage &amp; Access &mdash; GCP NIBSC Wiki 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Your First GCP Session" href="connecting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> GCP NIBSC Wiki
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="connecting.html">Your First GCP Session</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Storage &amp; Access</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#buckets-object-storage">Buckets &amp; Object storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bucket-creation-file-upload">Bucket Creation &amp; File Upload</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mounting-buckets-to-vms-using-gcsfuse">Mounting Buckets to VMs using GCSFuse</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GCP NIBSC Wiki</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Data Storage &amp; Access</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/storage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-storage-access">
+<h1>Data Storage &amp; Access<a class="headerlink" href="#data-storage-access" title="Permalink to this headline"></a></h1>
+<section id="buckets-object-storage">
+<h2>Buckets &amp; Object storage<a class="headerlink" href="#buckets-object-storage" title="Permalink to this headline"></a></h2>
+<p>Along with compute and network, storage is one of the fundamental Google Cloud resources.</p>
+<p>Unlike the on-site HPC which uses file storage, data in GCP is not stored and organized as a hierarchy of folders &amp; files.  Instead, Google Cloud Storage uses object storage where each file is stored in as an object and accessed and retrieved using a unique identifier.</p>
+<p>Each object has a unique URL for which to access it. We will see how this can be useful for sharing data outside the environment later…</p>
+<p>Cloud storage objects are organized into containers called <em>buckets</em>.</p>
+<p>All buckets are associated with a project. When you create a bucket you give it a globally-unique name, specify a geographic location where the bucket and its contents are stored and choose a storage class.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pick a bucket location in the same region as your VMs to minimize latency</p>
+</div>
+</section>
+<section id="bucket-creation-file-upload">
+<h2>Bucket Creation &amp; File Upload<a class="headerlink" href="#bucket-creation-file-upload" title="Permalink to this headline"></a></h2>
+<p>Buckets can be created and managed using:</p>
+<ul class="simple">
+<li><p>GCP console</p></li>
+<li><p>Cloud Shell</p></li>
+<li><p>Command Line with cloud SDK installed</p></li>
+</ul>
+<p><strong>GCP Console</strong></p>
+<ul class="simple">
+<li><p>Search for cloud storage using the console search bar and click on the service</p></li>
+<li><p>To create a bucket, select ‘Create Bucket’</p></li>
+<li><p>Give the bucket a unique name, select Europe-West2 as the location type, choose ‘Standard’ as the default storage class and ensure access control is set as ‘Uniform’.</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-storageupload.png"><img alt="Uploading objects to buckets" src="_images/gcp-storageupload.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>To upload data to the bucket you have created, click on the bucket name in the console and select upload files/upload folder</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Upload speeds can be quite slow for large files; consider using gsutil with multi-threading enabled</p>
+</div>
+<a class="reference internal image-reference" href="_images/gcp-storagedelete.png"><img alt="Deleting/downloading objects from buckets" src="_images/gcp-storagedelete.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>To download or delete files/folders in a bucket, select the object in the bucket and choose Download/Delete option</p></li>
+</ul>
+<p><strong>gsutil: Cloud Storage from the command line</strong></p>
+<p>A faster, more flexible option for managing storage objects and buckets is the gsutil scripts included as part of the cloud SDK.</p>
+<p>Many of these gsutil commands work similarly to standard linux commands for file manipulation (cp, mv, rm, rsync etc).</p>
+<p>Some examples of common gsutil commands are included below:</p>
+<ul class="simple">
+<li><p>Create bucket</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">mb</span> <span class="pre">-b</span> <span class="pre">-c</span> <span class="pre">&quot;Standard&quot;</span> <span class="pre">-l</span> <span class="pre">europe-west2</span> <span class="pre">gs://{​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>gsutil mb parameters: <code class="docutils literal notranslate"><span class="pre">-b</span></code>: uniform bucket-level access(on/off), <code class="docutils literal notranslate"><span class="pre">-l</span></code>: location, <code class="docutils literal notranslate"><span class="pre">-c</span></code>: storage class</p>
+</div>
+<ul class="simple">
+<li><p>Copy file to bucket</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">cp</span> <span class="pre">Desktop/example.png</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</span></code></p>
+<ul class="simple">
+<li><p>Create folder in bucket and copy file into it</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>On Google Cloud storage buckets have a ‘flat’ structure, meaning ‘folders’ are really just string prefixes added to object names</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">cp</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/example.png</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/test-folder/example.png</span></code></p>
+<ul class="simple">
+<li><p>List objects in bucket or folder</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">ls</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</span></code></p>
+<ul class="simple">
+<li><p>Download objects in bucket locally</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">cp</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/example.png</span> <span class="pre">Desktop/example.png</span></code></p>
+<ul class="simple">
+<li><p>Delete object in bucket</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">rm</span> <span class="pre">gs://{​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​BUCKET_NAME}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​/example.png</span></code></p>
+<ul class="simple">
+<li><p>Delete bucket and all objects stored within recursively</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gsutil</span> <span class="pre">rm</span> <span class="pre">-r</span> <span class="pre">gs://my-awesome-bucket</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For further information, see gsutil documentation: <code class="docutils literal notranslate"><span class="pre">gsutil</span> <span class="pre">--help</span></code> and quick start information <a class="reference external" href="https://cloud.google.com/storage/docs/quickstart-gsutil">here</a>.</p>
+</div>
+</section>
+<section id="mounting-buckets-to-vms-using-gcsfuse">
+<h2>Mounting Buckets to VMs using GCSFuse<a class="headerlink" href="#mounting-buckets-to-vms-using-gcsfuse" title="Permalink to this headline"></a></h2>
+<p>While our GCP environment does not have shared file storage, a tool called gcsFuse can be used to mount storage buckets onto virtual machines (VMs)</p>
+<p>This allows users on VMs to interact with storage objects in mounted buckets as they would on a standard shared file storage system.</p>
+<p>Input and output buckets have been created for you and automatically mounted to Virtual Machine (VM) folder <code class="docutils literal notranslate"><span class="pre">gcsfuse`</span></code> for VMs created from the instance templates</p>
+<p>You can follow the instructions below to mount and unmount additional buckets using gcsfuse.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before invoking gcsfuse, you must have a GCS bucket that you want to mount.
+If the bucket doesn’t exist, create it first following instructions in previous section</p>
+</div>
+<p>Say you want to mount the GCS bucket called <code class="docutils literal notranslate"><span class="pre">gs://my-bucket</span></code></p>
+<ul class="simple">
+<li><p>First create the directory into which you want to mount the gcsfuse bucket, then run gcsfuse:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">mkdir</span> <span class="pre">/path/to/mount/point</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">gcsfuse</span> <span class="pre">gs://my-bucket</span> <span class="pre">/path/to/mount/point</span></code></p>
+<ul class="simple">
+<li><p>Check the bucket has been mounted successfully</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">ls</span> <span class="pre">/path/to/mount/point</span></code></p>
+<ul class="simple">
+<li><p>On Linux, you can unmount the buckets using fuse’s fusermount tool:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">fusermount</span> <span class="pre">-u</span> <span class="pre">/path/to/mount/point</span></code></p>
+<ul class="simple">
+<li><p>On OSX unmount by running the below command:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">umount</span> <span class="pre">/path/to/mount/point</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reading and writing to a mounted bucket has much higher latency than a local file system. If you need to increase IOPs, consider attaching a local storage disk to the VM instance and storing data here instead.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>GCS object names map directly to file paths using the separator <code class="docutils literal notranslate"><span class="pre">/</span></code> Object names ending in a <code class="docutils literal notranslate"><span class="pre">/</span></code> represent a directory, and all other object names represent a file. Directories are by default not implicitly defined; they exist only if a matching object ending in a slash exists. For example, say that you use a nextflow pipeline to create a folder and associated objects such as <code class="docutils literal notranslate"><span class="pre">fastqc-logs/fastqc.html</span></code>. The file system will initially appear empty, since no <code class="docutils literal notranslate"><span class="pre">fastqc-logs/</span></code> folder exists in the mounted directory. To circumvent this, run <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">fastqc-logs</span></code> you will now see a directory named “fastqc-logs” containing a file named “fastqc.html”.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Further information on mounting storage via gcsfuse can be found on <a class="reference external" href="https://github.com/GoogleCloudPlatform/gcsfuse">github</a>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="connecting.html" class="btn btn-neutral float-left" title="Your First GCP Session" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Martin Gordon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

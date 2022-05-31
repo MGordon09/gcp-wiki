@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating Virtual Machines &mdash; GCP NIBSC Wiki 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example Workflows" href="workflows.html" />
+    <link rel="prev" title="Moving data from HPC" href="uploading.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> GCP NIBSC Wiki
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="connecting.html">Your First GCP Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Data Storage &amp; Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uploading.html">Moving data from HPC</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating Virtual Machines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-vm-s-from-instance-templates">Creating VM’s from Instance Templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vm-creation-walkthrough">VM Creation: Walkthrough</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Example Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signedurl.html">Data Sharing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running-jobs.html">Running Jobs on GCP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing Software on GCP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qwiklabs.html">GCP Training Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GCP NIBSC Wiki</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Creating Virtual Machines</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/creating-vms.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-virtual-machines">
+<h1>Creating Virtual Machines<a class="headerlink" href="#creating-virtual-machines" title="Permalink to this headline"></a></h1>
+<p>Most of the work we will be doing involves running running software on virtual machines.</p>
+<p>Virtual machines (VM) are digital versions of a physical computers. They can run programs and operating systems, store data, connect to networks, and do other computing functions.</p>
+<p>VM’s are created using Compute Engine, Googles Infrastructure as a Service (IaaS) offering. This offers a high degree of customisability and allows users to scale VMs to their needs.</p>
+<section id="creating-vm-s-from-instance-templates">
+<h2>Creating VM’s from Instance Templates<a class="headerlink" href="#creating-vm-s-from-instance-templates" title="Permalink to this headline"></a></h2>
+<p>An instance template is a resource that you can use as a ‘recipe’ to create virtual machine (VM) instances. Instance templates define the VM configuration, including machine type, boot disk image or container image, labels, startup script, and other instance properties, including pre-installed software that is available.</p>
+<p>Two instance templates have been created for users, who have a choice of what to use depending on their workflow requirements.</p>
+<ul class="simple">
+<li><p><strong>mhra-ngs-tools:</strong> VM template with conda, singularity, cloud SDK and installed</p></li>
+<li><p><strong>mhra-ngs-nextflow-dsub:</strong> VM template with nextflow, dsub and cloud SDK installed</p></li>
+</ul>
+<p>These two images should give you all the flexibility to execute your workflows.</p>
+<p>The mhra-ngs-tools template generates a larger VM with more disk space. This VM is a more suitable environment for interactive sessions.</p>
+<p>The mhra-ngs-nextflow-dsub template generates a smaller VM suitable for launching batch jobs using either dsub or Nextflow. Both of these tools use the Google Life Science API (<a class="reference external" href="https://cloud.google.com/life-sciences/docs/reference/rest">https://cloud.google.com/life-sciences/docs/reference/rest</a>) to orchestrate these workflows.</p>
+</section>
+<section id="vm-creation-walkthrough">
+<h2>VM Creation: Walkthrough<a class="headerlink" href="#vm-creation-walkthrough" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Log in to GCP using your account credentials</p></li>
+<li><p>Select your project</p></li>
+<li><p>Search for ‘Compute Engine’ in the GCP console search bar -&gt; select ‘Create Instance’ -&gt; ‘New VM instance from template’. Select the image that best fits your workflow and hit continue:</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-vmfromtemplate.png"><img alt="Creating VM from Instance Template" src="_images/gcp-vmfromtemplate.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>Name your VM, select europe-west2 (London) as region (any zone is fine), scroll down and click ‘Create’.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The instance template configurations should be fine for majority of workflows. Aside from naming and setting VM location, please only modify as required</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>VMs can be created via CLI using cloud shell or a terminal with cloud SDK installed, such as your hpc-scratch or your personal machine -check out the ‘Equivalent Command Line’ option below and try it!</p>
+</div>
+<ul class="simple">
+<li><p>You have now created a fully-functioning VM! To view your VM, return to the VM instances screen. You will see a green tick beside your VM if it is operational.</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-vminstances.png"><img alt="Running VMs" src="_images/gcp-vminstances.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>To pause/stop/restart your VM, select the three dots in the right-hand side of the screen and choose an option</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-vminstancesstop.png"><img alt="Stop VMs" src="_images/gcp-vminstancesstop.png" style="width: 800px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>Please remember to stop your VM</em> when not in use and delete once your work is finished to avoid incurring excessive costs!</p>
+</div>
+<ul class="simple">
+<li><p>To connect to your VM select the ‘ssh’ button beside it’s name, this will create a new pop-up window and provide access to the VM terminal:</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-vmstartup.png"><img alt="VM terminal" src="_images/gcp-vmstartup.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>You are now ready to start you analysis! Check out the next section for some standard workflows</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some further resources: <a class="reference external" href="https://cloud.google.com/compute/docs/instances/create-vm-from-instance-template">Creating VMs from Image Templates</a>., <a class="reference external" href="https://cloud.google.com/compute/docs/instances/connecting-to-instance">Connecting to VM instances</a>. and <a class="reference external" href="https://cloud.google.com/sdk/docs/cheatsheet">Gcloud CLI cheatsheet</a>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uploading.html" class="btn btn-neutral float-left" title="Moving data from HPC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="workflows.html" class="btn btn-neutral float-right" title="Example Workflows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Martin Gordon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example Workflows &mdash; GCP NIBSC Wiki 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Updating VM Instance Templates" href="updatingimages.html" />
+    <link rel="prev" title="Creating Virtual Machines" href="creating-vms.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> GCP NIBSC Wiki
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="connecting.html">Your First GCP Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Data Storage &amp; Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uploading.html">Moving data from HPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="creating-vms.html">Creating Virtual Machines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mhra-ngs-tools">mhra-ngs-tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mhra-ngs-nextflow-dsub">mhra-ngs-nextflow-dsub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="updatingimages.html">Updating VM Instance Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signedurl.html">Data Sharing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing Software on GCP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qwiklabs.html">GCP Training Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GCP NIBSC Wiki</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Example Workflows</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/workflows.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="example-workflows">
+<h1>Example Workflows<a class="headerlink" href="#example-workflows" title="Permalink to this headline"></a></h1>
+<p>Here we provide a brief walkthrough for running basic workflows on VM’s created from the instance templates.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Methods listed here may change to better represent best working practices. We encourage users to adapt the workflows as needed and suggest improvements to help us improve the service for everyone!</p>
+</div>
+<section id="mhra-ngs-tools">
+<h2>mhra-ngs-tools<a class="headerlink" href="#mhra-ngs-tools" title="Permalink to this headline"></a></h2>
+<p><strong>Using Conda</strong></p>
+<ul class="simple">
+<li><p>Create a VM from the mhra-ngs-tools instance template using the instructions in ‘Creating VM’s’ section of the wiki.</p></li>
+<li><p>ssh onto the VM. Allow some time for system boot-up and software installations. When the environment is ready, you shoudl see a prompt similar to the image below. The VM is now ready for use!</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-ngstoolsstartup.png"><img alt="mhra-ngs-tools VM" src="_images/gcp-ngstoolsstartup.png" style="width: 800px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can check see from the boot-up message that three buckets have been automatically mounted: <cite>${​​​​​​​PROJECT-ID}​​​​​​​-input</cite>, <cite>${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-out</cite> and <cite>${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-nextflow</cite>. All three are mounted under <cite>gcsfuse</cite> folder in your home directory. You can use these buckets or create new buckets and mount them using gcsfuse.</p>
+</div>
+<ul class="simple">
+<li><p>Upload data to a storage bucket. You can upload some test fastQ files to these buckets using either the GCP console or gsutil. You can use the available buckets or create new buckets and mount using gcsfuse.</p></li>
+<li><p>I am using gsutil, which is installed on hpc-scratch as shown below. See gsutil section for user authentication and configuration set-up.</p></li>
+<li><p>View buckets available on your project</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#  on hpc-scratch
+
+# first authenticate with GCP user account
+$ google init --console-only
+
+
+# list buckets
+$ gsutil ls
+
+# copy data (`-m` for parallel transfer)
+$ gsutil -m cp *.fastq.gz gs://mhra-xxx-xxx-xxx-input
+</pre></div>
+</div>
+<p>-You can now view these objects in your storage bucket. Check the data is mounted on your vm:</p>
+<a class="reference internal image-reference" href="_images/gcp-gcsfusemount.png"><img alt="Mounted buckets" src="_images/gcp-gcsfusemount.png" style="width: 800px;" /></a>
+<p>​​​​​​
+We will now create a conda environment, install a standard tool (cutadapt) and run this on the mounted input folder.</p>
+<p>Processed output will be written to a mounted output bucket</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is not possible to read or write to Cloud Storage directly. Objects must be either <strong>1.</strong> copied/moved back and forth from VM using gsutil or <strong>2.</strong> the storage bucket mounted on the local machine using gcsfuse</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can write this to the local machine but beware disk space limitations. Disk space can be increased on VM at start-up, or you attach a additional disks. <strong>Beware this data will be lost on VM deletion unless it is backed up elsewhere!</strong></p>
+</div>
+<ul class="simple">
+<li><p>Three conda environments are available in the image by default. The default environment contains many tools preinstalled - you can view these tools by activating the environment and running <cite>$conda list</cite></p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-condaenv.png"><img alt="Available conda environments" src="_images/gcp-condaenv.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>To run this workflow, we will be creating a new conda environment. Run the code below to create a new environment and install latest version of cutadapt</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ conda create -n cutadapt cutadapt
+
+# check environment is ready
+cutadapt -h
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Run cutadapt on data in the mounted input bucket and write output to the mounted output bucket (you could also wrap this in a bash script).</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#trim read pairs
+for in1 in ./gcsfuse/mhra-ngs-dev-mr2s_input/*_R1.fastq.gz; do in2=${in1/R1.fastq.gz/R2.fastq.gz}; R1=$(basename $in1); R2=$(basename $in2); OUTDIR=&#39;./gcsfuse/mhra-ngs-dev-mr2s_output&#39;;cutadapt -q 30 -o ${OUTDIR}/${R1/_R1.fastq.gz/_trimmed_R1.fastq.gz} -p ${OUTDIR}/${R2/_R2.fastq.gz/_trimmed_R2.fastq.gz} $in1 $in2;done
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Check the output bucket for the trimmed data.</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ls ./gcsfuse/mhra-ngs-dev-mr2s_output
+</pre></div>
+</div>
+<p><strong>Using Singularity</strong></p>
+<ul class="simple">
+<li><p>Singularity is pre-installed on the VM created from the ngs-tools template. The workflow is very similar to the conda workflow above.</p></li>
+<li><p>Check the singularity version. Run <cite>singularity pull</cite> to pull an image from one of the public registries. You can also use this command to pull docker images and create singularity image files (.sif) from them. For the purposes of this tutorial, we will pull a docker image of the cutadapt tool from DockerHub (note the <cite>://docker</cite> prefix below)</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># pull latest cutadapt singularity container from DockerHub
+$ singularity pull cutadapt.sif docker://kfdrc/cutadapt
+
+# enter container
+$ singularity shell cutadapt.sif
+
+# check cutadapt is working
+Singularity&gt; cutadapt -h
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Run the cutadapt command above to write data to the output bucket. Check the bucket to confirm the data is there</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some directories are automatically mounted into the container by default (special auto bind mount directories include: <cite>$HOME</cite> <cite>/tmp</cite> <cite>/proc</cite> <cite>/sys</cite> <cite>/dev</cite> ) As gcsfuse folder is in <cite>$HOME</cite>, you don’t need to do anything extra. To mount additional directories use option or set the environmental variable (<cite>–bind  $SINGULARITY_BINDPATH</cite>)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While the service account used to access the VM has bucket write permissions, it does not have permissions to modify objects i.e. you can’t overwrite, alter or delete items in the bucket from the VM. This is a security measure to ensure service accounts do not have excess permissions. To remove items from buckets, you need user account privileges (i.e use the console or cloud shell)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Resources: <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/index.html">conda documentation</a>. , <a class="reference external" href="https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf">conda cheatsheet</a>. , <a class="reference external" href="https://sylabs.io/guides/3.5/user-guide/introduction.html">singularity documentation</a>., <a class="reference external" href="https://singularity-tutorial.github.io/">singularity tutorial</a>.</p>
+</div>
+</section>
+<section id="mhra-ngs-nextflow-dsub">
+<h2>mhra-ngs-nextflow-dsub<a class="headerlink" href="#mhra-ngs-nextflow-dsub" title="Permalink to this headline"></a></h2>
+<p><strong>Nextflow example workflow</strong></p>
+<p>Nextflow is a workflow management software used by bioinformaticians to integrate all of their bash/python/perl/other scripts into a one cohesive workflow.</p>
+<p>Nextflow allows users to create scalable, modular and reproducible scientific workflows underpinned by software (docker/singularity/conda) containers.</p>
+<p>Nextlfow integrates nicely with GCP Google Life Science API, which runs in the background and manages compute engine resources (ie configure, create and destroy VMs) as required by the pipeline processes. With a single command, you can launch a Nextflow pipeline composed of several processes each associated with their own container, and Nextflow and GCP will orchestrate the workflow for you!</p>
+<p>Below we provide instructions on running a toy nextflow pipeline inside the VM. Both Nextlfow and the pipeline have been installed for you on the mhra-ngs-nextflow-dsub instances.</p>
+<ul class="simple">
+<li><p>Create a VM from the mhra-ngs-nextflow-dsub instance template using the instructions provided previously.</p></li>
+<li><p>ssh onto the VM. Allow some time for system boot-up and software installations. When the envinronment is ready, you shoudl see a prompt similar to the image below. The VM is now ready for use!</p></li>
+<li><p>You can check see from the boot-up message that three buckets have been automatically mounted: <cite>${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-input</cite> and <cite>${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-out</cite>, and <cite>${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT-ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-nextflow</cite>. The buckets are mounted under gcsfuse folder in your home directory</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-ngsnextflowstartup.png"><img alt="ngs-nextflow-dsub vm startup" src="_images/gcp-ngsnextflowstartup.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>With a newly created VM, you must first exit the VM and ssh back in. This is necessary to initialise Docker installation.</p></li>
+<li><p>You can check where nextflow is installed using the ‘which’ command:</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ which nextflow #/opt/nextflow/nextflow
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Before running the toy RNAseq nextflow pipeline, we must first check if the pipeline has been configured correctly. You can see from the VM start-up message the rnaseq-nf pipeline is installed under <cite>/opt/nextflow</cite>. Run the following command to inspect the configuration file for the rnaseq-nf pipeline:</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># open the nextflow configuration file
+nano /opt/nextflow/rnaseq-nf/nextflow.config
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You can see the config file specifies that the pipeline output location has been set to a results directory in <cite>$HOME</cite> on the VM (this folder will be created by the pipeline run). We would like to modify this to store data in a Google Storage bucket as <strong>1)</strong> disk space is limited on the VM and <strong>2)</strong> data in storage is more secure long-term as everything stored in a VM is lost if it is deleted!</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-rnaseqoutdir.png"><img alt="rnaseq pipeline config file" src="_images/gcp-rnaseqoutdir.png" style="width: 800px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Disk space can be increased by customizing the VM at start-up. You can also attach a secondary disk to the VM if needed</p>
+</div>
+<p>To write output to storage, you can either <strong>1)</strong> edit line 26 in the config file (<cite>params.outdir = “results”</cite>) to redirect output to a storage bucket or <strong>2)</strong> specify <cite>–outdir $BUCKETNAME</cite> when launching the pipeline. We will do the latter.
+​​​​​​</p>
+<p>Lets take a look at some of the other pipeline pre-set configurations. Scroll down to line 66 to see the gls execution profile for the Google Life Science environment:</p>
+<a class="reference internal image-reference" href="_images/gcp-rnaseqconfig.png"><img alt="google lifescience config profile" src="_images/gcp-rnaseqconfig.png" style="width: 800px;" /></a>
+<p>Profiles are a set of configuration attributes that are activated when launching a nextflow pipeline execution by using the ‘-profile’ command line option. They essentially control how the pipeline is executed.</p>
+<a class="reference internal image-reference" href="_images/gcp-dsubscript.png"><img alt="dsub submission script" src="_images/gcp-dsubscript.png" style="width: 800px;" /></a>
+<p>Important profile configurations include:</p>
+<ul class="simple">
+<li><p><strong>process.executor:</strong> the executor is the nextflow component that determines the system where a pipeline is run and supervises it’s execution. Other options for different environments include slurm and local among others.</p></li>
+<li><p><strong>google.location:</strong> the Google locations where the job executions are deployed to Google Life Sciences API</p></li>
+<li><p><strong>google.region:</strong> Google region where compute is executed</p></li>
+<li><p><strong>google.project:</strong> The Google project associated with the pipeline</p></li>
+<li><p><strong>google.lifesciences.network:</strong> The network to attach the VM network interface to</p></li>
+<li><p><strong>google.lifesciences.serviceAccountEmail:</strong> The Google service account used for the pipeline execution</p></li>
+<li><p><strong>google.lifesciences.subnetwork:</strong> The name of the subnetwork to attach the VM instance to</p></li>
+</ul>
+<p>For more information on different profile options available, check out the configuration options in the Google Cloud section of the Nextlfow <a class="reference external" href="https://www.nextflow.io/docs/latest/google.html">documentation</a>.</p>
+<ul class="simple">
+<li><p>Now we are ready to run the pipeline! cd to <cite>$HOME</cite> and run the following command:</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># write output to a bucket
+nextflow run /opt/nextflow/rnaseq-nf/main.nf -profile gls --outdir gs://${BUCKET_NAME}
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You should see the Nextflow welcome message and pipeline start-up. You can see progress on the different processes and their associated work directories.</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-rnaseqexecution.png"><img alt="rnaseq pipeline execution" src="_images/gcp-rnaseqexecution.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p>You will also notice that the scripts are exported to a work directory bucket. The current VM serves only kick start the pipeline, with the computation performed in VMs spun up by Google Life Science API.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you refresh the VM instances page on the GCP console (or run <cite>gcloud compute instances list</cite> on command line) you will see the Google Life Sciences API has created new VMs to execute the pipeline processes. These will be spun down automatically after processes has completed.</p>
+</div>
+<ul class="simple">
+<li><p>After the pipeline has completed, check your output bucket for the results. You can also look inside the <cite>${​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​PROJECT_ID}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-nextflow</cite> bucket, which for our tutorial functions as the work/scratch directory for the pipeline. It holds the transitory files and info on the processes and commands run.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The work directory can be very useful for troubleshooting and investigating issues with your pipeline run</p>
+</div>
+<ul class="simple">
+<li><p>You might also want to access these files in the mounted directories. Notice that if you look inside the output folder the fastqc_gut_logs folder and it’s output seems to be missing…</p></li>
+<li><p>This is a quirk of the gcsfuse software, where directories created by external processes are not implicitly defined (see storage section of wiki on gcsfuse for further info). To view these files in the mounted directly, simply create a directory named ‘fastqc_gut_logs’)</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># create output folder for
+mkdir gcsfuse/mhra-ngs-dev-mr2s_output/fastqc_gut_logs
+</pre></div>
+</div>
+<p>You have now seen how to configure and run a nextflow pipeline on a VM using the Google Life Science API!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Resources: <a class="reference external" href="https://www.nextflow.io/docs/latest/index.html">Nextflow documentation</a>, <a class="reference external" href="https://nf-co.re/​​​​​​​">NF-core pipelines</a>, <a class="reference external" href="https://cloud.google.com/life-sciences/docs​​​​​​​">Google Life Science API documentation</a>, <a class="reference external" href="https://cloud.google.com/life-sciences/docs/tutorials/nextflow">Nextflow tutorial on GCP:</a>.</p>
+</div>
+<p><strong>Dsub example workflow</strong></p>
+<p>Dsub is a commmand-line tool that allows you to submit and run containerised batch jobs in cloud computing environments. Dsub is modelled after traditional high-performance computing job schedulers like SLURM.</p>
+<p>Similar to Nextflow, Dsub also uses the Google Life Science API as backend executor to run batch jobs. Dsub can be considered somewhat analogous to submitting and executing batch jobs on the HPC.</p>
+<ul class="simple">
+<li><p>Follow steps 1-4 for the Nextflow workflow above.</p></li>
+<li><p>Once you have ssh’ed back into the machine, check that dsub is installed:</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ which dsub # /usr/local/bin/dsub
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Open the bash script containing the dsub test job submission script</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ nano /opt/dsub/dsub_sample.sh
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Dsub job scripts share some overlap with the nextflow config file. Some of the key parameters are:</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/gcp-dsubscript.png"><img alt="dsub script" src="_images/gcp-dsubscript.png" style="width: 800px;" /></a>
+<ul class="simple">
+<li><p><strong>provider:</strong> the executor for the dsub job. Can be set to ‘local’ for testing</p></li>
+<li><p><strong>project:</strong> the Google project where the pipeline is to be run</p></li>
+<li><p><strong>region:</strong> compute engine zone where pipeline task are to be run</p></li>
+<li><p><strong>location:</strong> Location for job submission to the Google Life Sciences API</p></li>
+<li><p><strong>service-account:</strong> email address for the service-account authenticated with the VM</p></li>
+<li><p><strong>image:</strong> docker image containing the software necessary to run the workflow</p></li>
+<li><p><strong>network:</strong> network VM is connected to via the VM network interface</p></li>
+<li><p><strong>input/output:</strong> input and output for the pipeline. Notice how these have been assigned to bash variables and which can be called when executing the pipeline</p></li>
+<li><p><strong>command:</strong> ​​​​​​​The command executed</p></li>
+</ul>
+<p>Options for dsub job submissions are very flexible. Similar to sbatch, you can also submit as script as a task instead of a command by substituting the <cite>–command</cite> option with <cite>–script</cite> parameter and providing the path to the script. You are also not limited to running bash scripts - check out dsub script examples on <a class="reference external" href="https://github.com/DataBiosphere/dsub/tree/main/examples/custom_scripts">Github</a>.</p>
+<p>You can also submit a list of files to be run as multiple tasks by supplying a tsv file with sample input and output information to the <cite>–task</cite> parameter in place of <cite>–input</cite> and <cite>–output</cite>. You can find some example scripts <a class="reference external" href="https://github.com/MGordon09/gcp-scripts/tree/main/dsub-examples">here</a>.</p>
+<ul class="simple">
+<li><p>Exit the script and execute it from your home directory:</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ bash /opt/dsub/dsub_sample.sh
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You will see tasks spawned by dsub and executed in compute engine VMs spawned by the GLS API. Once the pipeline has completed successfully, you will see a ‘SUCCESS’ message appear on screen.</p></li>
+<li><p>Check your storage buckets to confirm output has been stored there.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Resources: <a class="reference external" href="https://cloud.google.com/life-sciences/docs/tutorials/dsub">dsub tutorial on Google Cloud</a>., <a class="reference external" href="https://github.com/DataBiosphere/dsub​​​​​​​">dsub github homepage</a>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="creating-vms.html" class="btn btn-neutral float-left" title="Creating Virtual Machines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="updatingimages.html" class="btn btn-neutral float-right" title="Updating VM Instance Templates" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Martin Gordon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

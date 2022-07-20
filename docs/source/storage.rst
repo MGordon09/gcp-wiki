@@ -9,7 +9,9 @@ Along with compute and network, storage is one of the fundamental Google Cloud r
 Unlike the on-site HPC which uses file storage, data in GCP is not stored and organized as a hierarchy of folders & files.  Instead, Google Cloud Storage uses object storage where each file is stored in as an object and accessed and retrieved using a unique identifier. 
 
 Each object has a unique URL for which to access it. We will see how this can be useful for sharing data outside the environment later...
- 
+
+Cloud storage is cheap and provides excellent availability and durability. 
+
 Cloud storage objects are organized into containers called *buckets*. 
 
 All buckets are associated with a project. When you create a bucket you give it a globally-unique name, specify a geographic location where the bucket and its contents are stored and choose a storage class.

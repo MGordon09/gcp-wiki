@@ -215,3 +215,42 @@ Here we will demonstrate how to set up & connect to the server and retrieve data
     Sometimes the connection can hang after executing `quit` command. This seems to be a bug. In these cases the connection can be closed from the server side.
 
 - After data transfer is complete, clean up unneeded resources. **This is very important from a security perspective!** Checklist: 1) move data in the storage bucket to users bucket using `gsutil cp` 2) shutdown & delete the VM 3) delete the service account json key in IAM & Admin -> Service Accounts -> Keys
+
+SFTPGo Server
+---------------
+
+An alternative (and more customisable) option for creating an SFTP server connected to GCS backend is the SFTPGo `app <https://github.com/drakkan/sftpgo>`_. 
+
+SFTPGo is an SFTP server that is distributed as an open source project that has the built in ability to access Google Cloud Storage (GCS). We can use SFTPGo as a mechanism for providing access to GCS through SFTP
+
+Once installed on a compute engine VM, it runs and maintains its own stateful local configuration. A browser/web based administrative console is then available for further custom configuration. 
+
+Through the admin console, we can create user identities that are known to SFTPGo. Each of these user identities has an associated name and password. 
+
+When the user is defined, we also name a GCP bucket that will be used as the storage that the user sees through an SFTP client. In order to access the bucket, we would also supply some Service Account credentials that SFTPGo will use to interact with the bucket on behalf of the user. 
+
+This configuration is incredibly flexible as it permits per user bucket access and Service Account configuration meaning that different users can have different access to different buckets with different access privileges. 
+
+Once configured, users can then attach SFTP clients (or optionally a web interface) to browse, put and get files stored on Cloud Storage.
+
+Below we will demonstrate how to setup and connect to a SFTPGo server and upload/retrieve files from a linked GCS bucket
+
+
+- Create a VM instance from the sftpgo-server Instance template (this template contains necessary network configurations and SFTPGo app and dependencies pre-installed)
+
+
+- Create a VM to serve as SFTP server: 
+
+.. code-block:: text
+          
+          # create through console or use gcloud command (sensitive info removed)
+          
+          gcloud compute instances create sftp-daemon \
+          --project=xxxxxxxx --zone=europe-west2-a \
+          --machine-type=e2-small --network-interface=network-tier=STANDARD,subnet=xxxx-xxxx-eu-west2-1 \
+          --maintenance-policy=MIGRATE --provisioning-model=STANDARD \
+          --service-account=sftp-xxxxxxxxxx \
+          --scopes=https://www.googleapis.com/auth/cloud-platform \
+          --tags=ingress-colab-transfer,egress-colab-transfer \
+          --create-disk=auto-delete=yes,boot=yes,device-name=sftp-daemon,image=projects/debian-cloud/global/images/debian-11-bullseye-v20220621,mode=rw,size=10,type=projects/xxxxxxxx/zones/us-central1-a/diskTypes/pd-balanced \
+          --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any

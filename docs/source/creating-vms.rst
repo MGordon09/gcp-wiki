@@ -41,8 +41,22 @@ VM Creation: Walkthrough
 
 - Name your VM, select europe-west2 (London) as region (any zone is fine), scroll down and click 'Create'.
 
+- **Optional** If you would like to create scheduled snapshots of VM persistent disks for recovery in event of VM deletion/failure, you can attach a `snapshot schedule <https://cloud.google.com/blog/products/compute/introducing-scheduled-snapshots-for-compute-engine-persistent-disk>` to the VM persistent disk. 
+
+- We have created a default snapshot schedule for all user projects. To attach, select 'Change' under the Boot disk option:
+
+.. image:: ../images/gcp-bootdisk.png
+  :width: 800
+  :alt: Changing boot disk options
+
+- Under Snapshot schedule option, select 'default-snapshot-schedule'. This will take a daily snapshot of the attached persistent disk (retained for 7 days) allowing you to recover on-disk data in event of accidental VM deletion.
+
+.. image:: ../images/gcp-attachsnapshot.png
+  :width: 800
+  :alt: Attach default snapshot schedule
+
 .. note::
-    The instance template configurations should be fine for majority of workflows. Aside from naming and setting VM location, please only modify as required
+    The instance template configurations should be fine for majority of workflows. Aside from naming, setting VM location and attaching snapshot schedules, please only modify as required
 
 .. note::
     VMs can be created via CLI using cloud shell or a terminal with cloud SDK installed, such as your hpc-scratch or your personal machine -check out the 'Equivalent Command Line' option below and try it!

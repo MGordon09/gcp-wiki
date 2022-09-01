@@ -25,7 +25,7 @@ The easiest way to share data with other members of the agency with an active GC
   :width: 800
   :alt: Providing users/groups bucket access
 
-- The internal user should now have access to bucekt objects. You can revoke access by removing the Principal from the resource.
+- The internal user should now have access to bucket objects. You can revoke access by removing the Principal from the resource.
 
 Using Signed URLs
 --------------------
@@ -254,3 +254,5 @@ Below we will demonstrate how to setup and connect to a SFTPGo server and upload
           --tags=ingress-colab-transfer,egress-colab-transfer \
           --create-disk=auto-delete=yes,boot=yes,device-name=sftp-daemon,image=projects/debian-cloud/global/images/debian-11-bullseye-v20220621,mode=rw,size=10,type=projects/xxxxxxxx/zones/us-central1-a/diskTypes/pd-balanced \
           --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+
+

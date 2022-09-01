@@ -34,9 +34,7 @@ Cloud SDK is pre-installed in cloud shell. It is also available on hpc-scratch a
    uploading
    creating-vms
    workflows
-   updatingimages
    signedurl
-   installing
    qwiklabs
 
 Indices and tables
